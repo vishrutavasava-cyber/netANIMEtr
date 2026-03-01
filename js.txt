@@ -1,0 +1,95 @@
+let data = JSON.parse(localStorage.getItem("otakuData")) || [];
+
+function saveToStorage(){
+  localStorage.setItem("otakuData", JSON.stringify(data));
+}
+
+function loadData(){
+  document.querySelectorAll(".section").forEach(sec => sec.innerHTML="");
+
+  data.forEach((item,index)=>{
+    const section=document.getElementById(item.category);
+    const card=document.createElement("div");
+    card.className="card";
+    card.innerHTML=`
+      <img src="${item.image}">
+      <h3>${item.title}</h3>
+      <button onclick="deleteItem(${index})" style="background:red;border:none;color:white;padding:5px 10px;border-radius:10px;">Delete</button>
+    `;
+    section.appendChild(card);
+  });
+}
+
+function openForm(){ document.getElementById("formModal").style.display="flex"; }
+function closeForm(){ document.getElementById("formModal").style.display="none"; }
+
+function saveItem(){
+  const title=document.getElementById("titleInput").value;
+  const file=document.getElementById("imageInput").files[0];
+  const category=document.getElementById("categoryInput").value;
+
+  if(!title||!file){ alert("Fill all fields"); return; }
+
+  const reader=new FileReader();
+  reader.onload=function(e){
+    data.push({title:title,image:e.target.result,category:category});
+    saveToStorage();
+    loadData();
+    closeForm();
+  };
+  reader.readAsDataURL(file);
+}
+
+function deleteItem(index){
+  if(confirm("Delete this item?")){
+    data.splice(index,1);
+    saveToStorage();
+    loadData();
+  }
+}
+
+function showSection(id){
+  document.querySelectorAll(".section").forEach(sec=>sec.classList.remove("active-section"));
+  document.querySelectorAll(".category-bar button").forEach(btn=>btn.classList.remove("active"));
+  document.getElementById(id).classList.add("active-section");
+  event.target.classList.add("active");
+}
+
+function searchItem(){
+  const value=document.getElementById("searchInput").value.toLowerCase();
+  document.querySelectorAll(".card").forEach(card=>{
+    const title=card.querySelector("h3").innerText.toLowerCase();
+    card.style.display=title.includes(value)?"block":"none";
+  });
+}
+
+function exportData(){
+  const blob=new Blob([JSON.stringify(data)],{type:"application/json"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="otaku-backup.json";
+  a.click();
+}
+
+function importData(event){
+  const file=event.target.files[0];
+  const reader=new FileReader();
+  reader.onload=function(e){
+    data=JSON.parse(e.target.result);
+    saveToStorage();
+    loadData();
+  };
+  reader.readAsText(file);
+}
+
+function toggleTheme(){
+  document.body.classList.toggle("neon");
+  localStorage.setItem("theme",document.body.classList.contains("neon")?"neon":"dark");
+}
+
+window.onload=function(){
+  if(localStorage.getItem("theme")==="neon"){
+    document.body.classList.add("neon");
+  }
+  loadData();
+};
