@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Otaku Hub</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <h1 class="splash-text">Otaku Hub</h1>
+</div>
+
+<header>
+  <h1>Otaku Hub</h1>
+  <button onclick="toggleTheme()" class="theme-btn">🌙</button>
+</header>
+
+<!-- SEARCH -->
+<div class="search-bar">
+  <input type="text" id="searchInput" placeholder="Search..." onkeyup="searchItem()">
+</div>
+
+<!-- CATEGORY -->
+<div class="category-bar">
+  <button onclick="showSection('anime')" class="active">Anime</button>
+  <button onclick="showSection('movie')">Movie</button>
+  <button onclick="showSection('manga')">Manga</button>
+  <button onclick="showSection('manhwa')">Manhwa</button>
+</div>
+
+<!-- SECTIONS -->
+<div id="anime" class="section active-section"></div>
+<div id="movie" class="section"></div>
+<div id="manga" class="section"></div>
+<div id="manhwa" class="section"></div>
+
+<!-- BACKUP -->
+<div class="backup-bar">
+  <button onclick="exportData()">📤 Backup</button>
+  <input type="file" id="importFile" hidden onchange="importData(event)">
+  <button onclick="document.getElementById('importFile').click()">📥 Restore</button>
+</div>
+
+<!-- FLOAT BUTTON -->
+<button class="fab" onclick="openForm()">+</button>
+
+<!-- FORM MODAL -->
+<div id="formModal" class="modal">
+  <div class="modal-content">
+    <h3>Add Item</h3>
+    <input type="text" id="titleInput" placeholder="Enter Name">
+    <input type="file" id="imageInput" accept="image/*">
+    <select id="categoryInput">
+      <option value="anime">Anime</option>
+      <option value="movie">Movie</option>
+      <option value="manga">Manga</option>
+      <option value="manhwa">Manhwa</option>
+    </select>
+    <button onclick="saveItem()">Save</button>
+    <button onclick="closeForm()">Cancel</button>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
